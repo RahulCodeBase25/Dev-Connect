@@ -13,12 +13,16 @@ app.use("/about" , (req,res)=>{
     res.send("This is my about page..");
 })
 
-app.use("/contact", (req,res)=>{
-    res.send("This is my contact page..");
+app.get("/user" , (req,res)=>{
+    res.send({firstName: "Rahul", lastName:"Singh"})
 })
- 
-app.use("/page", (req,res)=>{
-    res.send("This is just a randome page...")
+
+app.post("/user" , (req,res)=>{
+    res.send("The data which we get is saved succesfully in this post method...")
+})
+
+app.delete("/user" , (req,res)=>{
+    res.send("Deleted Successfully!!!")
 })
 
 app.listen(7777, ()=>{
