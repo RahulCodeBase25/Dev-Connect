@@ -1,51 +1,31 @@
 const express = require("express");
 
 const app = express();
-app.use("/", (req, res, next) => {
-  if (req.path === "/") {
-    res.send("This is my dashboard..");
-  } else {
-    next(); // Pass the request to the next matching route
-  }
-});
 
-app.use("/about", (req, res) => {
-  res.send("This is my about page..");
-});
+const {adminAuth , userAuth} = require("./middlewares/auth")  //require kiya admin ke auth ke liye
 
-app.use(
-  "/test",
-  (req, res, next) => {
-    res.send("Handling the routes");
-    console.log('In array format that will also give the same op');
-    next();
-  },
-  (req, res,next) => {
-    console.log('Handling the 2nd route inside of route...');
-    // res.send("Route ke andar ka route");
-    // next();
-  },
-  (req,res)=>{
-    console.log('there have to be a route handler , then only next will work');
-    
-  }
-);
+//now let me create a middleware for Auth and put all conditions and logic in only one function:->
+app.use("/admin" ,adminAuth )
 
-app.get("/user/:userId/:ghar/:gym", (req, res) => {
-  //this is how you read your data
-  console.log(req.query); //just to do this "/user?userid=101"
-  console.log(req.params); //this is how you read the parameters of routes given after ":"
-  //":" -colon means dynamic routes
-  res.send({ firstName: "Rahul", lastName: "Singh" });
-});
+app.get("/admin/getAllData", (req,res)=>{
+  res.send("All data sent");
+})
 
-app.post("/user", (req, res) => {
-  res.send("The data which we get is saved succesfully in this post method...");
-});
+app.get("/admin/deleteUser", (req,res)=>{
+  res.send("Deleted all user");
+})
 
-app.delete("/user", (req, res) => {
-  res.send("Deleted Successfully!!!");
-});
+app.get("/user" , userAuth, (req,res)=>{  //i can also do like this , userAuth ka middleware sidha idhari hi define kar diya.
+  res.send("User data sent ")
+})
+
+
+
+
+
+
+
+
 
 //Here "?" represents that ,whatever is before ? mark is optional ,ex:->rahul and rahl both will work
 //and "+" means before rahuuuuuuul can write like this but rahullll is now allowed
