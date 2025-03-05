@@ -30,6 +30,17 @@ app.get("/user" ,async (req,res)=>{
   }
 })
 
+app.delete("/user" , async (req,res)=>{
+  const userId = req.body.userId;
+  try{
+    // const user = await User.findByIdAndDelete({_id : userId}); //i can also pass like this✅
+    const user = await User.findByIdAndDelete(userId);
+    res.send("User deleted Successfully!!")
+  }catch(err){
+    res.status(404).send("The user you're trying to delete is not found..")
+  }
+})
+
 app.get("/feed" ,async (req,res)=>{
   try{
     const users = await User.find({});
