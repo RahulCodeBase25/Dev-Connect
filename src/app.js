@@ -41,6 +41,22 @@ app.delete("/user" , async (req,res)=>{
   }
 })
 
+//Lets create a update Api now:->
+app.patch("/user", async(req, res)=>{
+  const userId = req.body.userId ; 
+  const data = req.body;
+  
+  try{
+    const user = await User.findByIdAndUpdate({_id : userId} , data , {returnDocuement : "before"} );
+    //This returnDocuement basically show karta hai apna latest data "before" and "after" ke baad..
+    console.log(user);
+    
+    res.send("User has been updated");
+  }catch(err){
+    res.status(404).send("User updation failed!!")
+  }
+})
+
 app.get("/feed" ,async (req,res)=>{
   try{
     const users = await User.find({});
