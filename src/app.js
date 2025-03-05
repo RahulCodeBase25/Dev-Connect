@@ -1,6 +1,19 @@
 const express = require("express");
 const dbConnect = require("./config/database")
 const app = express();
+const User = require("./models/user");
+
+app.post("/signup", async (req,res)=>{
+  const user = new User ({
+    firstName : "Viral",
+    lastName:"kohli",
+    age: 38,
+    emailId : "virat.kohli@gmail.com",
+    password : "virat@",
+  });
+  await user.save();
+  res.send("User Added Sucessfully🌟")
+})
 
 dbConnect()
 .then(()=>{
