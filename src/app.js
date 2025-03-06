@@ -47,13 +47,14 @@ app.patch("/user", async(req, res)=>{
   const data = req.body;
   
   try{
-    const user = await User.findByIdAndUpdate({_id : userId} , data , {returnDocuement : "before"} );
+    const user = await User.findByIdAndUpdate({_id : userId} ,
+    data , 
+    {returnDocuement : "before",runValidators:true} //Now bcz i added validations in my database so i have to add this "runValidators" field in my obj
+    );
     //This returnDocuement basically show karta hai apna latest data "before" and "after" ke baad..
-    console.log(user);
-    
     res.send("User has been updated");
   }catch(err){
-    res.status(404).send("User updation failed!!")
+    res.status(404).send("User updation failed!!" + err.message)
   }
 })
 
