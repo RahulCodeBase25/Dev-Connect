@@ -42,16 +42,24 @@ app.delete("/user" , async (req,res)=>{
 })
 
 //Lets create a update Api now:->
-app.patch("/user", async(req, res)=>{
-  const userId = req.body.userId ; 
-  const data = req.body;
-  
+app.patch("/user/:userId", async(req, res)=>{
+  const userId = req.params?.userId ; //Now userId is imp whenever i need to upate any users data.
+  const data = req.body;  
   try{
+    const ALLOWED_UPDATES=["photoUrl","about","skills","gender", "age"];
+
+  const isUpdateAllowed = Object.keys(data).every((k)=>ALLOWED_UPDATES.includes(k)); //I should remember this
+  if(!isUpdateAllowed){
+    throw new Error("Updates not allowed...");
+  }
+  if(data?.skills.length > 5){
+    throw new Error("You can add only 5 skills here...")
+  }
     const user = await User.findByIdAndUpdate({_id : userId} ,
     data , 
-    {returnDocuement : "before",runValidators:true} //Now bcz i added validations in my database so i have to add this "runValidators" field in my obj
+    {returnDocument : "before",runValidators:true} //Now bcz i added validations in my database so i have to add this "runValidators" field in my obj
     );
-    //This returnDocuement basically show karta hai apna latest data "before" and "after" ke baad..
+    //This returnDocument basically show karta hai apna latest data "before" and "after" ke baad..
     res.send("User has been updated");
   }catch(err){
     res.status(404).send("User updation failed!!" + err.message)
