@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator")
 
 const userSchema = new mongoose.Schema({
     firstName : {
@@ -15,11 +16,21 @@ const userSchema = new mongoose.Schema({
         required : true,
         unique : true,
         lowercase : true,
-        trim : true
+        trim : true,
+        validate(value){
+        if(!validator.isEmail(value)){
+            throw new Error("Invalid Email addres: " + value);
+        }
+        },
     },
     password : {
         type: String , 
-        required :true
+        required :true,
+        validate(value){
+            if(!validator.isStrongPassword(value)){
+                throw new Error("Your password is weak: " + value);
+            }
+            },
     },
     age : {
         type : Number,
@@ -35,7 +46,12 @@ const userSchema = new mongoose.Schema({
     },
     photoUrl : {
         type : String , 
-        default : "https://static.vecteezy.com/system/resources/thumbnails/048/334/475/small_2x/a-person-icon-on-a-transparent-background-png.png"
+        default : "https://static.vecteezy.com/system/resources/thumbnails/048/334/475/small_2x/a-person-icon-on-a-transparent-background-png.png",
+        validate(value){
+            if(!validator.isURL(value)){
+                throw new Error("Invalid Photo URL: " + value);
+            }
+            },
         },
 
     about : {
