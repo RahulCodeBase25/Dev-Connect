@@ -2,8 +2,29 @@ const express = require("express");
 const dbConnect = require("./config/database")
 const app = express();
 const User = require("./models/user");
+const { validateSignUpdata } = require("./utils/validation");
+const bcrypt = require("bcrypt");
 
 app.use(express.json());
+
+app.post("/signup", async (req,res)=>{
+  try{
+    //First validating by adding validations
+    validateSignUpdata(req);
+
+    //Second adding encryption in or DB by bcrypt so our DB will not disclose the user password(and that is called adding salt or salting method in our DB).
+    const {password , firstName , lastName , emailId} = req.body;
+    const passwordHash = await bcrypt.hash(password,10); //here 10 is our salt.
+    //Third - creating a new instace of user model.
+    const user = new User ({
+      firstName , lastName , emailId , password:passwordHash,
+    });
+    await user.save();
+    res.send("User Added Sucessfully🌟")
+  }catch(err){
+    res.status(400).send("ERROR: " + err.message);
+  }
+})
 
 app.get("/user" ,async (req,res)=>{
   const userEmail = req.body.emailId;
@@ -73,17 +94,6 @@ app.get("/feed" ,async (req,res)=>{
   }catch(err){
     res.status(400).send("Something Went Wrong!!!")
   }
-})
-
-app.post("/signup", async (req,res)=>{
-  const user = new User (req.body);
-  try{
-    await user.save();
-    res.send("User Added Sucessfully🌟")
-  }catch(err){
-    res.status(400).send("Error saving the user:" + err.message);
-  }
-  
 })
 
 dbConnect()
