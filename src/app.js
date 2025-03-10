@@ -4,8 +4,11 @@ const app = express();
 const User = require("./models/user");
 const { validateSignUpdata } = require("./utils/validation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken")
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.post("/signup", async (req,res)=>{
   try{
@@ -36,6 +39,15 @@ app.post("/login" , async (req,res)=>{
 
     const isPasswordvalid = await bcrypt.compare(password , user.password);
     if(isPasswordvalid){
+
+      //after eating cookie, lets add jwt:->
+      const token =await jwt.sign({_id : user._id},"Singh5771@");
+      console.log(token);
+      
+
+      //Now, i am adding the token to cookie and sending the response back to user
+      res.cookie("token" , token)
+
       res.send("Login Successfull🥳...")
     }
     else{
@@ -47,6 +59,27 @@ app.post("/login" , async (req,res)=>{
     res.status(400).send("ERROR: " + err.message);
   }
 })
+
+app.get("/profile" , async (req , res)=>{
+  try{
+  const cookies = req.cookies;
+  const {token} = cookies;  //Ek route se dusre route mai agar kuch liya to {} lgane pdte hai...
+  if(!token){
+    throw new Error("Invalid token!!...")
+  }
+  const decodedMsg = await jwt.verify(token, "Singh5771@");
+  const {_id} = decodedMsg; 
+  const user = await User.findById(_id);
+  if(!user){
+    throw new Error("User not found...");
+  }
+   res.send(user);
+}catch(err){
+  res.status(400).send("ERROR : " + err.message);
+  }
+})
+
+
 app.get("/user" ,async (req,res)=>{
   const userEmail = req.body.emailId;
   try{
