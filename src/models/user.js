@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const validator = require("validator")
+const validator = require("validator");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
     firstName : {
@@ -63,6 +64,21 @@ const userSchema = new mongoose.Schema({
     }
 },
 {timestamps : true},//ye filed mere pure mongoose schema ke sath add hoga.it will give createdAt and Updated At 
-)
+);
 
+userSchema.methods.getJWT = async function(){
+    const user = this ;
+
+    const token =await jwt.sign({_id : user._id},"Singh5771@" , {expiresIn : "7d"}); //7d means 7days
+}
+
+//Now lets do same bcrypt means for validating password:->
+userSchema.methods.validatePassword = async function(passwordInputByUser){
+
+    const user = this;
+    const passwordHash = user.password;
+    const isPasswordvalid = await bcrypt.compare(passwordInputByUser , passwordHash);
+    return isPasswordvalid;
+
+}
 module.exports = mongoose.model("User" , userSchema);

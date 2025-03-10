@@ -37,10 +37,9 @@ app.post("/login" , async (req,res)=>{
     if(!user){
       throw new Error("Invalid Credentials❌...")
     }
-    const isPasswordvalid = await bcrypt.compare(password , user.password);
+    const isPasswordvalid = await user.validatePassword(password);
     if(isPasswordvalid){
-      //after eating cookie, lets add jwt:->
-      const token =await jwt.sign({_id : user._id},"Singh5771@" , {expiresIn : "7d"}); //7d means 7days
+      const token = await user.getJWT();
       //Now, i am adding the token to cookie and sending the response back to user
       res.cookie("token" , token , {expires: new Date(Date.now()+ 8 * 3600000)}) //upar bnaya token expire hone ka ye hai 8 hours mai cookies expire hone ka , we can see the date in cookies postman
       res.send("Login Successfull🥳...")
