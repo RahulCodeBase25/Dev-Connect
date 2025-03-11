@@ -41,6 +41,7 @@ app.post("/login" , async (req,res)=>{
     if(isPasswordvalid){
       const token = await user.getJWT();
       //Now, i am adding the token to cookie and sending the response back to user
+      
       res.cookie("token" , token , {expires: new Date(Date.now()+ 8 * 3600000)}) //upar bnaya token expire hone ka ye hai 8 hours mai cookies expire hone ka , we can see the date in cookies postman
       res.send("Login Successfull🥳...")
     }
@@ -60,6 +61,7 @@ app.get("/profile" ,userAuth, async (req , res)=>{
   res.status(400).send("ERROR : " + err.message);
   }
 })
+
 app.post("/sendConnectionReq" ,userAuth, (req,res)=>{
   const user = req.user; //This is how i can read who is the user here..
   console.log('Sending a connection request but auth became easy now..');

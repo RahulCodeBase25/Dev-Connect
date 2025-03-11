@@ -16,8 +16,11 @@ const userAuth =async (req,res,next)=>{
   if(!user){
     throw new Error("User not found👤...")
   }
+  
   req.user= user; //Now from Auth we will get this user ans send it back to the further process is /profile
+
   next(); //bcz its the middleware so we can easily use the next function...
+
 }catch(err){
   res.status(400).send("ERROR : "+err.message)
 }
