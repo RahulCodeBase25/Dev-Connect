@@ -70,7 +70,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.getJWT = async function(){
     const user = this ;
 
-    const token =await jwt.sign({_id : user._id},"Singh5771@" , {expiresIn : "7d"}); //7d means 7days
+    const token =await jwt.sign({_id : user._id},"Aara25398@" , {expiresIn : "8d"}); //7d means 7days
 }
 
 //Now lets do same bcrypt means for validating password:->

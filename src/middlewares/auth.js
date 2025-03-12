@@ -1,15 +1,26 @@
+const express = require("express");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user")
+const User = require("../models/user");
+const cookieParser = require("cookie-parser");
+
+const app = express();
+app.use(cookieParser()); // <--- Middleware to read cookies
 
 const userAuth =async (req,res,next)=>{
   //1)->Read the token from the req cookies
   try{
-  const {token} = req.cookies;  
+  const {token} = req.cookies;
+  console.log("Cookies received:", req.cookies); // Log all cookies  
+  console.log("Extracted token:", token); // Check if token exists
+  
   if(!token){
     throw new Error("Invalid token!!🎟️🎟️...")
   }
-  // const decodedObj = await jwt.verify(token , "Singh5771@");
-  const decodedObj = await jwt.verify(token, process.env.JWT_SECRET);
+  const decodedObj = jwt.verify(token, "Aara25398@");
+
+  console.log(decodedObj);
+  
+  // const decodedObj = await jwt.verify(token, process.env.JWT_SECRET);
 
 
   //2)->Validate the token

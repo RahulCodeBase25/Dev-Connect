@@ -3,6 +3,8 @@ const authRouter = express.Router();
 const { validateSignUpdata } = require("../utils/validation"); //bcz now its one more folder deep after adding routes
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const userAuth = require("../middlewares/auth");
+
 
 authRouter.post("/signup", async (req,res)=>{
   try{
@@ -46,4 +48,10 @@ authRouter.post("/login" , async (req,res)=>{
     }
   })
 
+authRouter.post("/logout" ,async (req,res) =>{
+  res
+  .cookie("token" , null , {
+    expires:new Date(Date.now()),//This means cookie will eventually not work bcz we are not setting any time
+  }).send("User has been loged Out!!!")
+})
   module.exports = authRouter;
