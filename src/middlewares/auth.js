@@ -1,10 +1,5 @@
-const express = require("express");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const cookieParser = require("cookie-parser");
-
-const app = express();
-app.use(cookieParser()); // <--- Middleware to read cookies
 
 const userAuth =async (req,res,next)=>{
   //1)->Read the token from the req cookies
@@ -16,15 +11,10 @@ const userAuth =async (req,res,next)=>{
   if(!token){
     throw new Error("Invalid token!!🎟️🎟️...")
   }
-  const decodedObj = jwt.verify(token, "Aara25398@");
-
-  console.log(decodedObj);
-  
-  // const decodedObj = await jwt.verify(token, process.env.JWT_SECRET);
-
+  const decodedObj =await jwt.verify(token, "Aara25398@");
 
   //2)->Validate the token
-  const{_id} = decodedObj;
+  const{ _id } = decodedObj;
   const user = await User.findById(_id)
   if(!user){
     throw new Error("User not found👤...")
@@ -39,6 +29,6 @@ const userAuth =async (req,res,next)=>{
 }
   }
 
-  module.exports = {  //normal object ke form mai exports kiya...
+  module.exports = {  
     userAuth ,
   }
