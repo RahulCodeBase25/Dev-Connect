@@ -40,10 +40,13 @@ const userSchema = new mongoose.Schema({
     },
     gender : {
         type : String,
-        validate(value){
-            if(!["male", "female" , "other"].includes(value)){
-                throw new Error("Entered the wrong value.");
-            }
+        enum:{
+        values:["male" , "female" , "other"],
+                message:`{VALUE} is not a type of gender🥲`,
+        // validate(value){
+        //     if(!["male", "female" , "other"].includes(value)){
+        //         throw new Error("Entered the wrong value.");
+        //     }
         },
     },
     photoUrl : {
@@ -67,11 +70,11 @@ const userSchema = new mongoose.Schema({
 {timestamps : true},//ye filed mere pure mongoose schema ke sath add hoga.it will give createdAt and Updated At 
 );
 
-userSchema.methods.getJWT = async function(){
-    const user = this ;
-
-    const token =await jwt.sign({_id : user._id},"Aara25398@" , {expiresIn : "8d"}); //7d means 7days
-}
+userSchema.methods.getJWT = function () {
+    const user = this;
+    const token = jwt.sign({ _id: user._id }, "Aara25398@", { expiresIn: "8d" }); 
+    return token;  // Return the token
+};
 
 //Now lets do same bcrypt means for validating password:->
 userSchema.methods.validatePassword = async function(passwordInputByUser){

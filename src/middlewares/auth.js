@@ -25,7 +25,7 @@ const userAuth =async (req,res,next)=>{
   next(); //bcz its the middleware so we can easily use the next function...
 
 }catch(err){
-  res.status(400).send("ERROR : "+err.message)
+  res.status(400).send("ERROR: " + err.message)
 }
   }
 
