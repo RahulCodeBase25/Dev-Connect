@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     firstName : {
         type:String,
         required : true,
+        index: true, //agar laakh user hai usme se bhot ka firstname same hoga hi,to ye indexing karna is imp
         minLength : 2,
         maxLength : 50
     } , 
@@ -42,7 +43,7 @@ const userSchema = new mongoose.Schema({
         type : String,
         enum:{
         values:["male" , "female" , "other"],
-                message:`{VALUE} is not a type of gender🥲`,
+        message:`{VALUE} is not a type of gender🥲`,
         // validate(value){
         //     if(!["male", "female" , "other"].includes(value)){
         //         throw new Error("Entered the wrong value.");
